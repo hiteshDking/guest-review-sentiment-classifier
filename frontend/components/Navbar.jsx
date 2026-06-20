@@ -1,3 +1,5 @@
+import ThemeToggle from "./ThemeToggle";
+
 export default function Navbar() {
   return (
     <nav className="bg-blue-600 text-white p-4">
@@ -6,11 +8,14 @@ export default function Navbar() {
           Guest Review Sentiment Classifier
         </h1>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <a href="/">Home</a>
           <a href="/about">About</a>
           <a href="/dashboard">Dashboard</a>
           <a href="/login">Login</a>
+          <a href="/showcase">Showcase</a>
+
+          <ThemeToggle />
         </div>
       </div>
     </nav>
