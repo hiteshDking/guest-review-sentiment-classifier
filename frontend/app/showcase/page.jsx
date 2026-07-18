@@ -31,6 +31,7 @@ export default function Showcase() {
       <Modal
         isOpen={open}
         onClose={() => setOpen(false)}
+        
         title="Demo Modal"
       >
         <p>Hello from Modal</p>
