@@ -1,7 +1,18 @@
+"use client";
+
+import { useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
 export default function Dashboard() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -10,7 +21,8 @@ export default function Dashboard() {
         <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
 
         <p className="text-lg">
-          This is the Dashboard page for viewing review analytics and sentiment insights.
+          This is the Dashboard page for viewing review analytics and sentiment
+          insights.
         </p>
       </main>
 

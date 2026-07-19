@@ -1,17 +1,27 @@
 "use client";
 
 import ThemeToggle from "./ThemeToggle";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("token")
-      : null;
+  const [mounted, setMounted] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+
+    const token = localStorage.getItem("token");
+    setLoggedIn(!!token);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <nav className="bg-blue-600 text-white p-4">
@@ -26,16 +36,19 @@ export default function Navbar() {
           <a href="/dashboard">Dashboard</a>
           <a href="/showcase">Showcase</a>
 
-          {token ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded"
-            >
-              Logout
-            </button>
-          ) : (
-            <a href="/login">Login</a>
-          )}
+          {loggedIn ? (
+  <button
+    onClick={handleLogout}
+    className="bg-red-500 px-3 py-1 rounded"
+  >
+    Logout
+  </button>
+) : (
+  <>
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
+  </>
+)}
 
           <ThemeToggle />
         </div>
