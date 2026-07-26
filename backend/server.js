@@ -5,6 +5,13 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const session = require("express-session");
 const passport = require("passport");
+console.log("Loading AI Route...");
+console.log(require.resolve("./routes/ai"));
+const reviewRoutes = require("./routes/reviews");
+const aiRoutes = require("./routes/ai");
+console.log(require.resolve("./routes/ai"));
+console.log(__filename);
+console.log(process.cwd());
 try {
   require("./passport");
   console.log("✅ passport.js required successfully");
@@ -17,11 +24,19 @@ const auth = require("./middleware/auth");
 const Review = require("./models/Review");
 
 const app = express();
+app.get("/", (req, res) => {
+  res.send("ROOT WORKING");
+});
 
+app.post("/hello", (req, res) => {
+  res.json({
+    message: "HELLO WORKING",
+  });
+});
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+app.use("/api/reviews", reviewRoutes);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -48,6 +63,7 @@ const authLimiter = rateLimit({
 
 // Auth Routes
 app.use("/api/auth", authLimiter, authRoutes);
+app.use("/api/ai", aiRoutes);
 
 // ===========================
 // MongoDB Connection
@@ -192,6 +208,11 @@ app.get("/api/reviews/search/:text", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.get("/test", (req, res) => {
   res.send("Server is working!");
+});
+app.post("/hello", (req, res) => {
+  res.json({
+    message: "Hello route works",
+  });
 });
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
