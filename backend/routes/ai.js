@@ -49,7 +49,7 @@ router.post("/sentiment", async (req, res) => {
   console.log(error.response?.status);
   console.log(error.response?.data);
   console.log(error.message);
-  console.log("========================================");
+  console.log("=================== =====================");
 
   res.status(500).json({
     success: false,
