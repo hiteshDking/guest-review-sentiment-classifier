@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
-export default function EditReview() {
+function EditReviewForm() {
   const searchParams = useSearchParams();
-
   const id = searchParams.get("id");
 
   const [guest, setGuest] = useState("");
@@ -16,15 +15,22 @@ export default function EditReview() {
   const [sentiment, setSentiment] = useState("");
 
   useEffect(() => {
-    loadReview();
-  }, []);
+    if (id) {
+      loadReview();
+    }
+  }, [id]);
 
   async function loadReview() {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${id}`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${id}`
+      );
+
       const data = await res.json();
 
-      const item = data.find((r) => r._id === id);
+      const item = Array.isArray(data)
+        ? data.find((r) => r._id === id)
+        : data;
 
       if (item) {
         setGuest(item.guest);
@@ -41,8 +47,8 @@ export default function EditReview() {
     e.preventDefault();
 
     try {
-const res = await fetch(
-  `${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${id}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${id}`,
         {
           method: "PUT",
           headers: {
@@ -74,16 +80,11 @@ const res = await fetch(
       <Navbar />
 
       <div className="max-w-xl mx-auto p-6 min-h-screen">
-
         <h1 className="text-3xl font-bold mb-6">
           Edit Review
         </h1>
 
-        <form
-          onSubmit={updateReview}
-          className="space-y-4"
-        >
-
+        <form onSubmit={updateReview} className="space-y-4">
           <input
             className="w-full border p-3 rounded"
             value={guest}
@@ -113,17 +114,21 @@ const res = await fetch(
             <option>Negative</option>
           </select>
 
-          <button
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded"
-          >
+          <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded">
             Update Review
           </button>
-
         </form>
-
       </div>
 
       <Footer />
     </>
+  );
+}
+
+export default function EditReview() {
+  return (
+    <Suspense fallback={<div className="p-6">Loading...</div>}>
+      <EditReviewForm />
+    </Suspense>
   );
 }
